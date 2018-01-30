@@ -169,16 +169,20 @@ function exconfig#apply()
     endif
 
     " custom ctrlp ignores
+    " let file_pattern = '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.csb$\|\.png$\|\.pkm$\|\.plist$\|\.jar\|\.ccz\|\.ogg\|\.tmx'
+    " let file_pattern = '\v(\.cpp|\.h|\.hh|\.cxx|\.lua|\.c)@<!$'
+    " let file_pattern = '\v(\.lua)@<!$'
     let file_pattern = ''
-    " let file_suffixs = vimentry#get('file_filter',[])
-    " if len(file_suffixs) > 0
-    "     for suffix in file_suffixs
-    "         let file_pattern .= suffix . '|'
-    "     endfor
-    "     let file_pattern = '\v\.(' . file_pattern , ')$'
-    " endif
+    let file_suffixs = vimentry#get('file_filter',[])
+    if len(file_suffixs) > 0
+        for suffix in file_suffixs
+            let file_pattern .= '.' . suffix . '|\'
+        endfor
+        let file_pattern = strpart(file_pattern,0,len(file_pattern)-2)
+        let file_pattern = '\v(\' . file_pattern . ')@<!$'
+    endif
 
-    let dir_pattern = ''
+    let dir_pattern = '\.git$\|\.hg$\|\.svn$'
     if vimentry#check( 'folder_filter_mode',  'exclude' )
         let folders = vimentry#get('folder_filter',[])
         if len(folders) > 0
@@ -189,6 +193,18 @@ function exconfig#apply()
 
             let dir_pattern = '\v[\/](' . dir_pattern . ')$'
         endif
+    else
+        " let dir_pattern = ''
+        " let folders = vimentry#get('folder_filter',[])
+        " if len(folders) > 0
+            " for folder in folders
+                " let dir_pattern .= folder . '|'
+            " endfor
+            " let dir_pattern = strpart( dir_pattern, 0, len(dir_pattern) - 1)
+
+            " let dir_pattern = '\v(' . dir_pattern . ')@<!$'
+        " endif
+
     endif
 
     let g:ctrlp_custom_ignore = {
@@ -197,6 +213,8 @@ function exconfig#apply()
                 \ }
 
 
+    let g:ack_default_options .= " --files-from=" . g:exvim_folder . "/files "
+    let g:ackprg .= " --files-from=" . g:exvim_folder . "/files "
     " TODO:
     " " set vimentry references
     " if !vimentry#check('sub_vimentry', '')
