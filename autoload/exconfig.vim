@@ -55,6 +55,7 @@ endf
 " exconfig#apply {{{
 function exconfig#apply()
 
+    set noacd " no autochchdir
     " ===================================
     " pre-check
     " ===================================
