@@ -31,6 +31,27 @@ function exconfig#edit_cur_vimentry()
     endif
 endfunction
 
+function! exconfig#Generate_ignore(ignore,tool, ...) abort
+    let ignore = []
+    if a:tool ==# 'ag'
+        for ig in split(a:ignore,',')
+            call add(ignore, '--ignore')
+            call add(ignore, "'" . ig . "'")
+        endfor
+    elseif a:tool ==# 'rg'
+        for ig in split(a:ignore,',')
+            call add(ignore, '-g')
+            if a:0 > 0
+                call add(ignore, "'" . ig . "'")
+            else
+                call add(ignore, "'!" . ig . "'")
+                " call add(ignore, '!' . ig)
+            endif
+        endfor
+    endif
+    return ignore
+endf
+
 " exconfig#apply {{{
 function exconfig#apply()
 
@@ -168,53 +189,78 @@ function exconfig#apply()
         augroup END
     endif
 
-    " custom ctrlp ignores
-    " let file_pattern = '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.csb$\|\.png$\|\.pkm$\|\.plist$\|\.jar\|\.ccz\|\.ogg\|\.tmx'
-    " let file_pattern = '\v(\.cpp|\.h|\.hh|\.cxx|\.lua|\.c)@<!$'
-    " let file_pattern = '\v(\.lua)@<!$'
-    let file_pattern = ''
-    let file_suffixs = vimentry#get('file_filter',[])
-    if len(file_suffixs) > 0
-        for suffix in file_suffixs
-            let file_pattern .= '.' . suffix . '|\'
-        endfor
-        let file_pattern = strpart(file_pattern,0,len(file_pattern)-2)
-        let file_pattern = '\v(\' . file_pattern . ')@<!$'
-    endif
 
-    let dir_pattern = '\.git$\|\.hg$\|\.svn$'
-    if vimentry#check( 'folder_filter_mode',  'exclude' )
-        let folders = vimentry#get('folder_filter',[])
-        if len(folders) > 0
-            for folder in folders
-                let dir_pattern .= folder . '|'
+    " ctrlp rg
+    if vimentry#check('enable_ctrlp_rg', 'true')
+        let file_pattern = ''
+        let file_suffixs = vimentry#get('file_filter',[])
+        if len(file_suffixs) > 0
+            for suffix in file_suffixs
+                let file_pattern .= '*.' . suffix . ','
             endfor
-            let dir_pattern = strpart( dir_pattern, 0, len(dir_pattern) - 1)
+        endif
 
-            let dir_pattern = '\v[\/](' . dir_pattern . ')$'
+        if vimentry#check( 'folder_filter_mode',  'exclude' )
+            let folders = vimentry#get('folder_filter',[])
+            if len(folders) > 0
+                for folder in folders
+                    let file_pattern .= '*/' .folder . '/*,'
+                endfor
+            endif
+            let g:ctrlp_user_command = 'rg %s --no-ignore --hidden --files -g "" '
+                        \ . join(exconfig#Generate_ignore(file_pattern,'rg'))
+        else
+            let g:ctrlp_user_command = 'rg %s --no-ignore --hidden --files -g "" '
+                        \ . join(exconfig#Generate_ignore(file_pattern,'rg', 1))
         endif
     else
-        " let dir_pattern = ''
-        " let folders = vimentry#get('folder_filter',[])
-        " if len(folders) > 0
-            " for folder in folders
-                " let dir_pattern .= folder . '|'
-            " endfor
-            " let dir_pattern = strpart( dir_pattern, 0, len(dir_pattern) - 1)
+        " custom ctrlp ignores
+        " let file_pattern = '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.csb$\|\.png$\|\.pkm$\|\.plist$\|\.jar\|\.ccz\|\.ogg\|\.tmx'
+        " let file_pattern = '\v(\.cpp|\.h|\.hh|\.cxx|\.lua|\.c)@<!$'
+        " let file_pattern = '\v(\.lua)@<!$'
+        let file_pattern = ''
+        let file_suffixs = vimentry#get('file_filter',[])
+        if len(file_suffixs) > 0
+            for suffix in file_suffixs
+                let file_pattern .= '.' . suffix . '|\'
+            endfor
+            let file_pattern = strpart(file_pattern,0,len(file_pattern)-2)
+            let file_pattern = '\v(\' . file_pattern . ')@<!$'
+        endif
 
-            " let dir_pattern = '\v(' . dir_pattern . ')@<!$'
-        " endif
+        let dir_pattern = '\.git$\|\.hg$\|\.svn$'
+        if vimentry#check( 'folder_filter_mode',  'exclude' )
+            let folders = vimentry#get('folder_filter',[])
+            if len(folders) > 0
+                for folder in folders
+                    let dir_pattern .= folder . '|'
+                endfor
+                let dir_pattern = strpart( dir_pattern, 0, len(dir_pattern) - 1)
 
+                let dir_pattern = '\v[\/](' . dir_pattern . ')$'
+            endif
+        else
+            " let dir_pattern = ''
+            " let folders = vimentry#get('folder_filter',[])
+            " if len(folders) > 0
+                " for folder in folders
+                    " let dir_pattern .= folder . '|'
+                " endfor
+                " let dir_pattern = strpart( dir_pattern, 0, len(dir_pattern) - 1)
+
+                " let dir_pattern = '\v(' . dir_pattern . ')@<!$'
+            " endif
+
+        endif
+
+        let g:ctrlp_custom_ignore = {
+                    \ 'dir': dir_pattern,
+                    \ 'file': file_pattern,
+                    \ }
+        let g:ack_default_options .= " --files-from=" . g:exvim_folder . "/files "
+        let g:ackprg .= " --files-from=" . g:exvim_folder . "/files "    
     endif
 
-    let g:ctrlp_custom_ignore = {
-                \ 'dir': dir_pattern,
-                \ 'file': file_pattern,
-                \ }
-
-
-    let g:ack_default_options .= " --files-from=" . g:exvim_folder . "/files "
-    let g:ackprg .= " --files-from=" . g:exvim_folder . "/files "
     " TODO:
     " " set vimentry references
     " if !vimentry#check('sub_vimentry', '')
@@ -232,6 +278,7 @@ function exconfig#apply()
     "     endif
     "   endfor
     " endif
+
 
     " ===================================
     " layout windows
