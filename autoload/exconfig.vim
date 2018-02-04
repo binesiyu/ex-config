@@ -39,15 +39,28 @@ function! exconfig#Generate_ignore(ignore,tool, ...) abort
             call add(ignore, "'" . ig . "'")
         endfor
     elseif a:tool ==# 'rg'
-        for ig in split(a:ignore,',')
-            call add(ignore, '-g')
-            if a:0 > 0
-                call add(ignore, "'" . ig . "'")
-            else
-                call add(ignore, "'!" . ig . "'")
-                " call add(ignore, '!' . ig)
-            endif
-        endfor
+        if ex#os#is('windows')
+            for ig in split(a:ignore,',')
+                call add(ignore, '-g')
+                if a:0 > 0
+                    call add(ignore, "\"" . ig . "\"")
+                else
+                    call add(ignore, "\"!" . ig . "\"")
+                    " call add(ignore, '!' . ig)
+                endif
+            endfor
+        else
+            for ig in split(a:ignore,',')
+                call add(ignore, '-g')
+                if a:0 > 0
+                    call add(ignore, "'" . ig . "'")
+                else
+                    call add(ignore, "'!" . ig . "'")
+                    " call add(ignore, '!' . ig)
+                endif
+            endfor
+
+        endif
     endif
     return ignore
 endf
@@ -258,8 +271,12 @@ function exconfig#apply()
                     \ 'dir': dir_pattern,
                     \ 'file': file_pattern,
                     \ }
-        let g:ack_default_options .= " --files-from=" . g:exvim_folder . "/files "
-        let g:ackprg .= " --files-from=" . g:exvim_folder . "/files "    
+        if exists("g:ack_default_options")
+            let g:ack_default_options .= " --files-from=" . g:exvim_folder . "/files "
+        endif
+        if exists("g:ackprg")
+            let g:ackprg .= " --files-from=" . g:exvim_folder . "/files "    
+        endif
     endif
 
     " TODO:
