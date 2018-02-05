@@ -7,10 +7,10 @@ if &background == "dark"
     " =============================
 
     hi clear exConfirmLine
-    hi exConfirmLine gui=none guibg=#458588 term=none cterm=none ctermbg=darkyellow
+    hi exConfirmLine gui=none guibg=#665c54 term=none cterm=none ctermbg=darkyellow
 
     hi clear exTargetLine
-    hi exTargetLine gui=none guibg=#458588 term=none cterm=none ctermbg=darkyellow
+    hi exTargetLine gui=none guibg=#665c54 term=none cterm=none ctermbg=darkyellow
 
     " ex-easyhl
     " =============================
@@ -35,11 +35,13 @@ if &background == "dark"
 
     " For marks a-z
     hi clear ShowMarksHLl
-    hi ShowMarksHLl term=bold cterm=none ctermbg=lightblue gui=none guibg=#eee8d5
+    " hi ShowMarksHLl term=bold cterm=none ctermbg=lightblue gui=none guibg=#eee8d5
 
     " For marks A-Z
     hi clear ShowMarksHLu
-    hi ShowMarksHLu term=bold cterm=bold ctermbg=lightred ctermfg=darkred gui=bold guibg=lightred guifg=darkred
+    hi clear ShowMarksHLo
+    hi clear ShowMarksHLm
+    " hi ShowMarksHLu term=bold cterm=bold ctermbg=lightred ctermfg=darkred gui=bold guibg=lightred guifg=darkred
 
     " ex-taglist highlight
     " =============================
@@ -103,11 +105,13 @@ else
 
     " For marks a-z
     hi clear ShowMarksHLl
-    hi ShowMarksHLl term=bold cterm=none ctermbg=grey gui=none guibg=grey
+    " hi ShowMarksHLl term=bold cterm=none ctermbg=grey gui=none guibg=grey
 
     " For marks A-Z
     hi clear ShowMarksHLu
-    hi ShowMarksHLu term=bold cterm=bold ctermbg=lightred ctermfg=darkred gui=bold guibg=lightred guifg=darkred
+    hi clear ShowMarksHLo
+    hi clear ShowMarksHLm
+    " hi ShowMarksHLu term=bold cterm=bold ctermbg=lightred ctermfg=darkred gui=bold guibg=lightred guifg=darkred
 
     " ex-taglist highlight
     " =============================
