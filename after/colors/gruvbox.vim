@@ -1,6 +1,6 @@
 if &background == "dark"
     " NOTE: keep visual mode words still using its own syntax color
-    hi Visual gui=NONE guifg=NONE guibg=#004b56
+    hi VertSplit guibg=#282828 guifg=#181A1F
 
     " ex
     " =============================
@@ -68,8 +68,7 @@ if &background == "dark"
     hi link ExtraWhitespace ErrorMsg
 else
     " NOTE: keep visual mode words still using its own syntax color
-    hi Visual gui=NONE guifg=NONE guibg=#ddd6c3
-
+    hi VertSplit guibg=#fbf1c7 guifg=#e7e9e1
     " ex
     " =============================
 
