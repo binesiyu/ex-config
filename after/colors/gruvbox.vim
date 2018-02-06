@@ -35,14 +35,14 @@ if &background == "dark"
     " =============================
 
     " For marks a-z
-    hi clear ShowMarksHLl
-    " hi ShowMarksHLl term=bold cterm=none ctermbg=lightblue gui=none guibg=#eee8d5
+    hi link ShowMarksHLl none
+    " hi ShowMarksHLl term=bold cterm=none ctermbg=grey gui=none guibg=grey
 
     " For marks A-Z
-    hi clear ShowMarksHLu
-    hi clear ShowMarksHLo
-    hi clear ShowMarksHLm
-    " hi ShowMarksHLu term=bold cterm=bold ctermbg=lightred ctermfg=darkred gui=bold guibg=lightred guifg=darkred
+    hi link ShowMarksHLu none
+    hi link ShowMarksHLo none
+    hi link ShowMarksHLm none
+
 
     " ex-taglist highlight
     " =============================
@@ -106,14 +106,13 @@ else
     " =============================
 
     " For marks a-z
-    hi clear ShowMarksHLl
+    hi link ShowMarksHLl none
     " hi ShowMarksHLl term=bold cterm=none ctermbg=grey gui=none guibg=grey
 
     " For marks A-Z
-    hi clear ShowMarksHLu
-    hi clear ShowMarksHLo
-    hi clear ShowMarksHLm
-    " hi ShowMarksHLu term=bold cterm=bold ctermbg=lightred ctermfg=darkred gui=bold guibg=lightred guifg=darkred
+    hi link ShowMarksHLu none
+    hi link ShowMarksHLo none
+    hi link ShowMarksHLm none
 
     " ex-taglist highlight
     " =============================
