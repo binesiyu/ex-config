@@ -33,6 +33,7 @@ if &background == "dark"
 
     " ex-showmarks highlight
     " =============================
+    hi link Operator GruvboxRed
 
     " For marks a-z
     hi link ShowMarksHLl none
@@ -116,6 +117,7 @@ else
 
     " ex-taglist highlight
     " =============================
+    hi link Operator GruvboxRed
 
     hi clear MyTagListFileName
     hi link MyTagListFileName Directory
