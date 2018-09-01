@@ -71,6 +71,7 @@ if &background == "dark"
     " =============================
     hi clear ExtraWhitespace
     hi link ExtraWhitespace ErrorMsg
+    hi link Flashy IncSearch
 else
     " NOTE: keep visual mode words still using its own syntax color
     hi VertSplit guibg=#fbf1c7 guifg=#e7e9e1
@@ -142,6 +143,7 @@ else
     " =============================
     hi clear ExtraWhitespace
     hi link ExtraWhitespace ErrorMsg
+    hi link Flashy IncSearch
 endif
 
 " vim:ts=4:sw=4:sts=4 et fdm=marker:
